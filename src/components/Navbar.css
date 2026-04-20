@@ -1,0 +1,55 @@
+.navbar {
+  background: var(--white);
+  border-bottom: 0.5px solid var(--sand-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-rat-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--pink-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.logo {
+  font-family: "Fraunces", serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.logout-btn {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  background: none;
+  border: 0.5px solid var(--sand-2);
+  border-radius: var(--r-pill);
+  padding: 5px 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.logout-btn:hover {
+  border-color: var(--sand-3);
+  color: var(--ink);
+}
