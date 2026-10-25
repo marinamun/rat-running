@@ -12,6 +12,20 @@ const COLORS = {
   sage: "#9AA77C",
 };
 
+const CAUSES = [
+  {
+    title: "Save the Seal Centre",
+    organisation: "Zeehondencentrum Pieterburen",
+    location: "Netherlands",
+    description:
+      "The Seal Centre rescues and rehabilitates sick and injured seals from the Wadden Sea, and it is now at risk of bankruptcy. Sign the petition or support them with a donation.",
+    image: "seals.jpg",
+    imageAlt: "A young seal resting on the sand",
+    url: "https://www.zeehondencentrum.nl/en/red-ons/",
+    cta: "Sign the petition",
+  },
+];
+
 type Status = "idle" | "loading" | "done" | "error";
 
 const LandingPage = () => {
@@ -156,6 +170,72 @@ const LandingPage = () => {
               </a>
               .
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CAUSES */}
+      <section id="causes">
+        <div className="mx-auto max-w-5xl px-6 py-14">
+          <h2
+            className="text-3xl sm:text-4xl"
+            style={{ fontFamily: "'Fraunces', serif", color: COLORS.bark }}
+          >
+            Causes that need you
+          </h2>
+          <p className="mt-2 max-w-xl text-base text-[#8a8278]">
+            Animal causes that need signatures and support right now. It only
+            takes a minute to help.
+          </p>
+
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {CAUSES.map((cause) => (
+              <a
+                key={cause.url}
+                href={cause.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col overflow-hidden rounded-xl border border-[#e2dccf] bg-white transition-transform hover:-translate-y-1"
+              >
+                <img
+                  src={cause.image}
+                  alt={cause.imageAlt}
+                  className="aspect-[4/3] w-full object-cover"
+                />
+                <div className="flex flex-1 flex-col gap-2 p-5">
+                  <span
+                    className="text-xs font-semibold uppercase tracking-wider"
+                    style={{ color: COLORS.sage }}
+                  >
+                    {cause.organisation} · {cause.location}
+                  </span>
+                  <h3
+                    className="text-xl"
+                    style={{
+                      fontFamily: "'Fraunces', serif",
+                      color: COLORS.bark,
+                    }}
+                  >
+                    {cause.title}
+                  </h3>
+                  <p className="flex-1 text-sm leading-relaxed text-[#6b6359]">
+                    {cause.description}
+                  </p>
+                  <span
+                    className="mt-2 inline-flex items-center gap-1 text-sm font-semibold"
+                    style={{ color: "#2E5E78" }}
+                  >
+                    {cause.cta}
+                    <span
+                      aria-hidden="true"
+                      className="transition-transform group-hover:translate-x-1"
+                    >
+                      →
+                    </span>
+                  </span>
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       </section>
