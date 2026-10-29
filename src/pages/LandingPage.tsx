@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 
 // Server function that adds the email to Kit (keeps the API key private)
 const SUBSCRIBE_URL = "/.netlify/functions/subscribe";
@@ -70,9 +71,25 @@ const LandingPage = () => {
         </h1>
 
         <p className="mt-2 text-base text-[#8a8278]">
-          Learn about animals, from zoology to behaviour and welfare, and help
-          the causes that protect them. <span aria-hidden="true">🦍 🐬 🦎</span>
+          The best places to learn about animals, collected in one place.{" "}
+          <span aria-hidden="true">🦍 🐬 🦎</span>
         </p>
+
+        {/* LIBRARY BUTTON */}
+        <Link
+          to="/library"
+          data-umami-event="library-button"
+          className="group mt-8 inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold transition-opacity hover:opacity-90"
+          style={{ backgroundColor: COLORS.bark, color: COLORS.sand }}
+        >
+          Go to the library
+          <span
+            aria-hidden="true"
+            className="transition-transform group-hover:translate-x-1"
+          >
+            →
+          </span>
+        </Link>
 
         <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
           {status === "done" ? (
