@@ -55,6 +55,30 @@ const RESOURCES: Resource[] = [
     url: "/Introduction to primates - study notes.pdf",
     added: "2026-10-29",
   },
+  {
+    id: "wur-introduction-animal-behaviour",
+    kind: "external",
+    title: "Introduction to Animal Behaviour",
+    description:
+      "Online course by Wageningen University & Research on how wild animals learn, communicate, find food, avoid predators, choose mates and raise young. 6 weeks, 4–6 hours per week, no prior knowledge needed. Free to study; the €209 is only for the official certificate.",
+    topic: "Ethology",
+    type: "Course",
+    uploadedBy: "Wageningen University & Research",
+    url: "https://www.wur.nl/en/education/for-professionals/programmes-and-courses/introduction-animal-behaviour",
+    added: "2026-10-29",
+  },
+  {
+    id: "cetaceans-human-care-europe",
+    kind: "external",
+    title: "The Future of Cetaceans Under Human Care in Europe",
+    description:
+      "Position paper by Annemarie van den Berg (Annemarie Consultancy), with 20 years of experience in cetacean rescue and rehabilitation. Argues that dolphins already in European parks will need care for decades, and calls for modern enclosures and expert-led rescue plans as parks close. An opinion piece in an ongoing debate.",
+    topic: "Welfare",
+    type: "Article",
+    uploadedBy: "Annemarie van den Berg",
+    url: "https://media.licdn.com/dms/document/media/v2/D4E1FAQFtDiXEEAQoSw/feedshare-document-pdf-analyzed/B4EaGCgoabIgAY-/0/1793190956506?e=1794441600&v=beta&t=GcmeX9PyMhqmGMWTYG21pReYKMPvtMmbCTmiHAt0jqE",
+    added: "2026-10-29",
+  },
 ];
 
 const KINDS: { value: Kind; label: string }[] = [

@@ -11,8 +11,13 @@ export const COLORS = {
 
 export type Topic = "Zoology" | "Ethology" | "Welfare";
 export type Kind = "notes" | "external";
-export type ContentType = "PDF" | "Image" | "Video" | "Article" | "Worksheet";
-
+export type ContentType =
+  | "PDF"
+  | "Image"
+  | "Video"
+  | "Article"
+  | "Worksheet"
+  | "Course";
 export type Resource = {
   id: string;
   kind: Kind; // "notes" = your own study notes (sign-in needed), "external" = link to another site
@@ -113,7 +118,7 @@ const ResourceOverview = ({ resource, index }: Props) => {
         >
           <div>
             <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a8278]">
-              Collected by
+              {kind === "external" ? "Author" : "Collected by"}{" "}
             </dt>
             <dd
               className="mt-0.5 text-base italic"
