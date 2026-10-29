@@ -1,2 +1,0 @@
-   /__/*    https://rat-running.firebaseapp.com/__/:splat    200
-   /*       /index.html   200
