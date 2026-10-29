@@ -12,10 +12,7 @@ import AccountBar from "../components/AccountBar";
 // Paste your Tally or Google Forms link here.
 // While it's empty, the button opens an email to you instead.
 const RECOMMEND_FORM_URL = "";
-const RECOMMEND_LINK =
-  RECOMMEND_FORM_URL ||
-  "mailto:learnandhelpanimals@gmail.com?subject=Resource%20recommendation";
-
+const RECOMMEND_LINK = "https://tally.so/r/jeeKqx";
 // Add one entry per resource.
 // kind "notes": your own file in /public (sign-in needed to open)
 // kind "external": a full https:// link to another site (open to everyone)
@@ -275,7 +272,7 @@ const StudyResources = () => {
             className="group inline-flex items-center gap-2 self-start rounded-lg px-5 py-3 text-sm font-semibold transition-opacity hover:opacity-90 sm:self-auto"
             style={{ backgroundColor: COLORS.bark, color: COLORS.sand }}
           >
-            Recommend a resource
+            Recommend a study resource
             <span
               aria-hidden="true"
               className="transition-transform group-hover:translate-x-1"
