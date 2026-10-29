@@ -40,7 +40,7 @@ const SignIn = () => {
     if (!email) return;
     setStatus("sending");
     try {
-      await signInWithGoogle(wantsUpdates);
+      await sendLibraryLink(email.trim(), next, wantsUpdates);
       setStatus("sent");
     } catch {
       setStatus("error");
@@ -49,13 +49,12 @@ const SignIn = () => {
 
   const handleGoogle = async () => {
     try {
-      await signInWithGoogle();
+      await signInWithGoogle(wantsUpdates);
       goTo(next);
-    } catch {
-      // popup closed or blocked: nothing to do
+    } catch (err) {
+      console.error("Google sign-in failed", err);
     }
   };
-
   return (
     <div
       className="grid min-h-screen place-items-center px-6 py-14"
