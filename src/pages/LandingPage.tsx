@@ -1,5 +1,18 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
+import zebraBg from "../assets/zebra3.JPG";
+import ImageCarousel, { type Slide } from "../components/ImageCarousel";
+import babyElephant from "../assets/babyelephant.JPG";
+import butterflies from "../assets/butterflies.JPG";
+import elephants from "../assets/elephants11.JPG";
+import giraffe from "../assets/giraffe6.JPG";
+import hotelRoom from "../assets/hotelroom.JPG";
+import ostriches from "../assets/ostrichfarm3.JPG";
+import seals from "../assets/seals in cape town3.JPG";
+import whales from "../assets/whales20.JPG";
+import zebra from "../assets/zebra2.JPG";
+import photo5 from "../assets/photo-output (5).jpeg";
+import photo10 from "../assets/photo-output (10).jpeg";
 
 // Server function that adds the email to Kit (keeps the API key private)
 const SUBSCRIBE_URL = "/.netlify/functions/subscribe";
@@ -25,6 +38,55 @@ const CAUSES = [
     url: "https://www.zeehondencentrum.nl/en/red-ons/",
     cta: "Sign the petition",
   },
+];
+
+const PILLARS = [
+  {
+    tag: "Learn",
+    color: "#FFD23F",
+    title: "A hub of learning resources",
+    text: "The best courses, articles and materials on zoology, animal behaviour and welfare, in one place.",
+    cta: "Go to the library",
+    to: "/library",
+  },
+  {
+    tag: "Explore",
+    color: "#FF8A3D",
+    title: "Your wildlife map",
+    text: "Photograph animals in the wild, pin them on your own globe and complete collections, like the most observed animals near you.",
+    cta: "Open my map",
+    to: "/wildlife",
+  },
+  {
+    tag: "Help",
+    color: "#FF85B3",
+    title: "Causes that need you",
+    text: "Petitions to sign, shelters to support and ways to give your time or skills to protect animals.",
+    cta: "See the causes",
+    to: "#causes",
+  },
+];
+
+const SLIDES: Slide[] = [
+  { src: babyElephant, alt: "A baby elephant", caption: "Baby elephant" },
+  { src: elephants, alt: "A herd of elephants", caption: "Elephant herd" },
+  { src: giraffe, alt: "A giraffe", caption: "Giraffe" },
+  { src: zebra, alt: "A zebra", caption: "Zebra" },
+  {
+    src: seals,
+    alt: "Cape fur seals in Cape Town",
+    caption: "Cape fur seals, Cape Town",
+  },
+  { src: whales, alt: "Whales in the ocean", caption: "Whales" },
+  { src: ostriches, alt: "Ostriches", caption: "Ostriches" },
+  { src: butterflies, alt: "Butterflies", caption: "Butterflies" },
+  {
+    src: hotelRoom,
+    alt: "Impalas from my hotel room",
+    caption: "View from hotel room",
+  },
+  { src: photo5, alt: "Crowned sifaka", caption: "Crowned sifaka" },
+  { src: photo10, alt: "Western gorilla", caption: "Western gorilla" },
 ];
 
 type Status = "idle" | "loading" | "done" | "error";
@@ -62,197 +124,188 @@ const LandingPage = () => {
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Raleway:wght@400;600;700&display=swap');`}</style>
 
       {/* HERO */}
-      <header className="mx-auto max-w-4xl px-6 pb-14 pt-10">
-        <h1
-          className="text-5xl leading-tight sm:text-6xl"
-          style={{ fontFamily: "'Fraunces', serif", color: COLORS.bark }}
-        >
-          Learn &amp; Help Animals
-        </h1>
-
-        <p className="mt-2 text-base text-[#8a8278]">
-          The best places to learn about animals, collected in one place.{" "}
-          <span aria-hidden="true">🦍 🐬 🦎</span>
-        </p>
-
-        {/* LIBRARY BUTTON */}
-        <Link
-          to="/library"
-          data-umami-event="library-button"
-          className="group mt-8 inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold transition-opacity hover:opacity-90"
-          style={{ backgroundColor: COLORS.bark, color: COLORS.sand }}
-        >
-          Go to the library
-          <span
-            aria-hidden="true"
-            className="transition-transform group-hover:translate-x-1"
+      {/* HERO */}
+      <header
+        className="relative bg-cover bg-center px-6 py-20 sm:py-28"
+        style={{ backgroundImage: `url(${zebraBg})` }}
+      >
+        <div className="mx-auto max-w-3xl rounded-2xl border-2 border-white bg-white/60 p-8 backdrop-blur-md sm:p-10">
+          <h1
+            className="text-5xl leading-tight sm:text-6xl"
+            style={{ fontFamily: "'Fraunces', serif", color: COLORS.bark }}
           >
-            →
-          </span>
-        </Link>
+            Learn &amp; Help Animals
+          </h1>
 
-        <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
-          {status === "done" ? (
-            <p className="text-sm" style={{ color: COLORS.bark }}>
-              Thank you, you're on the list!
-            </p>
-          ) : (
-            <form
-              onSubmit={handleSubmit}
-              className="flex w-full max-w-sm items-center rounded-lg border border-[#d6d1c7] bg-white p-1"
-            >
-              <label htmlFor="email" className="sr-only">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm outline-none"
-                style={{ color: COLORS.bark }}
-              />
-              <button
-                type="submit"
-                disabled={status === "loading"}
-                className="rounded-md px-3 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-85 disabled:opacity-60"
-                style={{ backgroundColor: COLORS.sage }}
-              >
-                {status === "loading" ? "Sending…" : "Subscribe"}
-              </button>
-            </form>
-          )}
-
-          {status !== "done" && (
-            <p className="max-w-[220px] text-xs" style={{ color: COLORS.bark }}>
-              Get notified when study resources and new features go live!
-            </p>
-          )}
-        </div>
-
-        {status === "error" && (
-          <p className="mt-3 text-xs text-red-700">
-            Something went wrong. Please try again.
+          <p className="mt-2 text-base text-[#4A3A2E]">
+            Learn about wildlife, collect your sightings and help the causes
+            that protect animals. <span aria-hidden="true">🦍 🐬 🦎</span>
           </p>
-        )}
+
+          {/* MAIN BUTTONS */}
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              to="/library"
+              data-umami-event="library-button"
+              className="group inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-[#2B2420] bg-white px-5 py-2.5 text-sm font-medium text-[#2B2420] transition-colors hover:bg-[#2B2420] hover:text-white"
+            >
+              Go to the library
+              <span
+                aria-hidden="true"
+                className="transition-transform group-hover:translate-x-1"
+              >
+                →
+              </span>
+            </Link>
+            <Link
+              to="/wildlife"
+              data-umami-event="wildlife-button"
+              className="group inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-[#2B2420] bg-white px-5 py-2.5 text-sm font-medium text-[#2B2420] transition-colors hover:bg-[#2B2420] hover:text-white"
+            >
+              Explore your wildlife map
+              <span
+                aria-hidden="true"
+                className="transition-transform group-hover:translate-x-1"
+              >
+                →
+              </span>
+            </Link>
+          </div>
+        </div>
       </header>
 
-      {/* ABOUT */}
-      <section style={{ backgroundColor: COLORS.bark }}>
-        <div className="mx-auto grid max-w-5xl items-center gap-8 px-6 py-12 md:grid-cols-2">
-          <img
-            src={COLLAGE_SRC}
-            alt="Photo collage of animals: a gorilla, a kitten, deer, a lemur, a marmoset and the sea"
-            className="w-full rounded-md"
-          />
-
-          <div className="space-y-5 text-sm leading-relaxed text-[#F3EFE4]">
-            <p>
-              Hi, my name is Marina. I'm building this platform so anyone can
-              learn about animals (zoology, behaviour, welfare) while I do the
-              same, and support different animal causes along the way.
-            </p>
-            <p>
-              <strong>Why?</strong> I did a bachelor's degree in languages and
-              now work full-time in tech. That didn't allow me to pursue formal
-              education in zoology or animal sciences, both because of time
-              constraints and because my background doesn't meet most programs'
-              entry requirements. That's why I started taking courses online and
-              volunteering in real life, so I could build my animal knowledge on
-              my own.
-            </p>
-            <p>
-              <strong>What is this platform about?</strong> I want to gather
-              that knowledge in one structured, organised place where anyone can
-              go to learn, instead of having to enrol in a thousand different
-              courses, compare a thousand fees and look through a thousand
-              different sites. A bit dramatic, but you get the point. Beyond the
-              educational side, I also want to build a way for people to connect
-              and offer their support (skills, time, or donations) to different
-              animal causes.
-            </p>
-            <p>
-              <strong>How can you join this community?</strong> Sign up to the
-              email list above to be the first to know when the study resources
-              go live and new features are added. And if you already have some
-              knowledge in this space and would like to help create content for
-              the socials, that would be veeery welcome. Simply email me at{" "}
-              <a
-                href="mailto:learnandhelpanimals@gmail.com"
-                className="underline underline-offset-2"
-              >
-                learnandhelpanimals@gmail.com
+      {/* LEARN · EXPLORE · HELP */}
+      <section className="mx-auto max-w-5xl px-6 pb-14">
+        <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-14">
+          {" "}
+          {PILLARS.map((p) => {
+            const cardClass =
+              "group flex flex-col rounded-2xl border-[1.5px] border-[#2B2420] bg-white p-6 transition-transform hover:-translate-y-0.5";
+            const content = (
+              <>
+                <span
+                  className="self-start rounded-full border border-[#2B2420] px-2.5 py-0.5 text-xs font-semibold text-[#2B2420]"
+                  style={{ backgroundColor: p.color }}
+                >
+                  {p.tag}
+                </span>
+                <h2
+                  className="mt-4 text-2xl leading-snug"
+                  style={{
+                    fontFamily: "'Fraunces', serif",
+                    color: COLORS.bark,
+                  }}
+                >
+                  {p.title}
+                </h2>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-[#6b6359]">
+                  {p.text}
+                </p>
+                <span className="mt-5 inline-flex items-center gap-1.5 self-start rounded-full border-[1.5px] border-[#2B2420] px-4 py-2 text-sm font-medium text-[#2B2420] transition-colors group-hover:bg-[#2B2420] group-hover:text-white">
+                  {p.cta}
+                  <span
+                    aria-hidden="true"
+                    className="transition-transform group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
+                </span>
+              </>
+            );
+            return p.to.startsWith("#") ? (
+              <a key={p.tag} href={p.to} className={cardClass}>
+                {content}
               </a>
-              .
+            ) : (
+              <Link key={p.tag} to={p.to} className={cardClass}>
+                {content}
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ABOUT */}
+      {/* WHY THIS PLATFORM */}
+      <section className="mx-auto max-w-5xl px-6 py-14">
+        <div className="grid items-center gap-8 md:grid-cols-5">
+          <div className="md:col-span-3">
+            <ImageCarousel slides={SLIDES} />
+          </div>
+
+          <div
+            className="md:col-span-2"
+            style={{ fontFamily: "'Poppins', sans-serif" }}
+          >
+            <span className="rounded-full border border-[#2B2420] bg-white px-2.5 py-0.5 text-xs font-semibold text-[#2B2420]">
+              Why this platform
+            </span>
+            <h2 className="mt-3 text-2xl font-semibold leading-snug text-[#2B2420] sm:text-3xl">
+              Learn, explore and protect wildlife
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-[#6b6359]">
+              Learn & Help Animals is a central hub for animal learning
+              resources. Explore trusted courses and materials on zoology,
+              behaviour and welfare, build your own wildlife photography
+              collection on an interactive map, and support the causes working
+              to protect animals.
             </p>
           </div>
         </div>
       </section>
 
-      {/* CAUSES */}
-      <section id="causes">
-        <div className="mx-auto max-w-5xl px-6 py-14">
-          <h2
-            className="text-3xl sm:text-4xl"
-            style={{ fontFamily: "'Fraunces', serif", color: COLORS.bark }}
-          >
-            Causes that need you
-          </h2>
-          <p className="mt-2 max-w-xl text-base text-[#8a8278]">
-            Animal causes that need signatures and support right now. It only
-            takes a minute to help.
-          </p>
+      {/* EMAIL SIGN-UP */}
+      <section className="mx-auto max-w-5xl px-6 py-14">
+        <div className="flex flex-col gap-6 rounded-2xl border-[1.5px] border-[#2B2420] bg-white p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+          <div>
+            <h2
+              className="text-xl font-semibold"
+              style={{ fontFamily: "'Poppins', sans-serif", color: "#2B2420" }}
+            >
+              Stay in the loop
+            </h2>
+            <p className="mt-1 max-w-md text-sm text-[#6b6359]">
+              Get notified when new study resources, causes and features go
+              live.
+            </p>
+          </div>
 
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {CAUSES.map((cause) => (
-              <a
-                key={cause.url}
-                href={cause.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex flex-col overflow-hidden rounded-xl border border-[#e2dccf] bg-white transition-transform hover:-translate-y-1"
+          <div className="w-full sm:max-w-sm">
+            {status === "done" ? (
+              <p className="text-sm font-medium text-[#2B2420]">
+                Thank you, you're on the list!
+              </p>
+            ) : (
+              <form
+                onSubmit={handleSubmit}
+                className="flex items-center gap-2 rounded-full border-[1.5px] border-[#2B2420] bg-white p-1"
               >
-                <img
-                  src={cause.image}
-                  alt={cause.imageAlt}
-                  className="aspect-[4/3] w-full object-cover"
+                <label htmlFor="email" className="sr-only">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email"
+                  className="min-w-0 flex-1 bg-transparent px-4 py-2 text-sm text-[#2B2420] outline-none"
                 />
-                <div className="flex flex-1 flex-col gap-2 p-5">
-                  <span
-                    className="text-xs font-semibold uppercase tracking-wider"
-                    style={{ color: COLORS.sage }}
-                  >
-                    {cause.organisation} · {cause.location}
-                  </span>
-                  <h3
-                    className="text-xl"
-                    style={{
-                      fontFamily: "'Fraunces', serif",
-                      color: COLORS.bark,
-                    }}
-                  >
-                    {cause.title}
-                  </h3>
-                  <p className="flex-1 text-sm leading-relaxed text-[#6b6359]">
-                    {cause.description}
-                  </p>
-                  <span
-                    className="mt-2 inline-flex items-center gap-1 text-sm font-semibold"
-                    style={{ color: "#2E5E78" }}
-                  >
-                    {cause.cta}
-                    <span
-                      aria-hidden="true"
-                      className="transition-transform group-hover:translate-x-1"
-                    >
-                      →
-                    </span>
-                  </span>
-                </div>
-              </a>
-            ))}
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className="rounded-full border-[1.5px] border-[#2B2420] bg-[#FFD23F] px-4 py-2 text-sm font-medium text-[#2B2420] transition-colors hover:bg-[#2B2420] hover:text-white disabled:opacity-50"
+                >
+                  {status === "loading" ? "Sending…" : "Subscribe"}
+                </button>
+              </form>
+            )}
+            {status === "error" && (
+              <p className="mt-2 text-xs text-red-700">
+                Something went wrong. Please try again.
+              </p>
+            )}
           </div>
         </div>
       </section>
