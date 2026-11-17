@@ -34,11 +34,28 @@ const RESOURCES: Resource[] = [
     url: "https://media.licdn.com/dms/document/media/v2/D4E1FAQFtDiXEEAQoSw/feedshare-document-pdf-analyzed/B4EaGCgoabIgAY-/0/1793190956506?e=1794441600&v=beta&t=GcmeX9PyMhqmGMWTYG21pReYKMPvtMmbCTmiHAt0jqE",
     added: "2026-10-29",
   },
+  {
+    id: "giraffe-neck-vigilance",
+    title:
+      "Giraffe Stature and Neck Elongation: Vigilance as an Evolutionary Mechanism",
+    description:
+      "Review of the main theories explaining why giraffes evolved such long necks: reaching high food, competition between males and temperature control among others",
+    topic: "Evolution",
+    type: "Article",
+    source: "Edgar M. Williams, University of South Wales",
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5037354/pdf/biology-05-00035.pdf",
+    added: "2026-11-17",
+  },
 ];
 
 type Filter = "All" | Topic;
-const FILTERS: Filter[] = ["All", "Zoology", "Ethology", "Welfare"];
-
+const FILTERS: Filter[] = [
+  "All",
+  "Zoology",
+  "Ethology",
+  "Welfare",
+  "Evolution",
+];
 const StudyResources = () => {
   const [filter, setFilter] = useState<Filter>("All");
   const [query, setQuery] = useState("");

@@ -6,7 +6,7 @@ export const COLORS = {
   paper: "#FBF8F1",
 };
 
-export type Topic = "Zoology" | "Ethology" | "Welfare";
+export type Topic = "Zoology" | "Ethology" | "Welfare" | "Evolution";
 export type ContentType =
   | "PDF"
   | "Image"
@@ -31,6 +31,7 @@ export const TOPIC_COLORS: Record<Topic, string> = {
   Zoology: "#FFD23F", // bright yellow
   Ethology: "#FF8A3D", // bright orange
   Welfare: "#FF85B3", // bright pink
+  Evolution: "#FFFB94",
 };
 
 const formatDate = (iso?: string) =>
