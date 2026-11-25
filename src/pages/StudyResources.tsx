@@ -46,6 +46,17 @@ const RESOURCES: Resource[] = [
     url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5037354/pdf/biology-05-00035.pdf",
     added: "2026-11-17",
   },
+  {
+    id: "how-animals-understand-death",
+    title: "How Animals Understand Death",
+    description:
+      "Article on how animals perceive death and whether they grieve.",
+    topic: "Ethology",
+    type: "Article",
+    source: "Brandon Keim, Nautilus",
+    url: "https://www.dropbox.com/scl/fi/r5gl2cwcvo19p5px1bu8p/AnimalDeath_Keim.pdf?rlkey=agqbldgp6nnaziyfp9a4imsmj&e=3&dl=0",
+    added: "2026-11-25",
+  },
 ];
 
 type Filter = "All" | Topic;

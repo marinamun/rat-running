@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Globe, { type GlobeMethods } from "react-globe.gl";
 import {
   BTN_PRIMARY,
@@ -26,11 +26,11 @@ type GlobePoint = Sighting & { color: string };
 // The spinning globe with a glowing dot per sighting
 const SightingsGlobe = ({
   points,
-  showEmpty,
+  emptyMessage,
   onPick,
 }: {
   points: GlobePoint[];
-  showEmpty: boolean;
+  emptyMessage: string | null; // shown at the bottom of the globe when set
   onPick: (s: GlobePoint) => void;
 }) => {
   const box = useRef<HTMLDivElement>(null);
@@ -82,10 +82,10 @@ const SightingsGlobe = ({
           />
         </GlobeGuard>
       )}
-      {showEmpty && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-6 text-center">
+      {emptyMessage && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-6 px-4 text-center">
           <p className="inline-block rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-[#2B2420]">
-            Your globe is empty. Add your first sighting!
+            {emptyMessage}
           </p>
         </div>
       )}
@@ -118,6 +118,7 @@ const WildlifeMap = () => {
   const [batch, setBatch] = useState(false);
   const [open, setOpen] = useState<Sighting | null>(null);
   const [signInError, setSignInError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const points: GlobePoint[] = useMemo(
     () => w.sightings.map((s) => ({ ...s, color: w.colorOf(s) })),
@@ -128,12 +129,18 @@ const WildlifeMap = () => {
     setSignInError(null);
     try {
       await signInWithGoogle();
+      return true;
     } catch {
       setSignInError("Sign-in didn't work. Please try again.");
+      return false;
     }
   };
 
-  /* ----- Loading / signed out ----- */
+  // Actions that save something ask the visitor to sign in first
+  const requireSignIn = async (action: () => void) => {
+    if (!w.user && !(await signIn())) return;
+    action();
+  };
 
   if (!w.authReady) {
     return (
@@ -143,38 +150,7 @@ const WildlifeMap = () => {
     );
   }
 
-  if (!w.user) {
-    return (
-      <PageShell>
-        <section className="mt-10 rounded-2xl border-[1.5px] border-[#2B2420] bg-white p-8 sm:p-12">
-          <h1
-            className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl"
-            style={{ color: THEME.ink }}
-          >
-            Your wildlife map
-          </h1>
-          <p className="mt-3 max-w-xl text-base text-[#6b6359]">
-            Photograph animals in the wild, pin them on your own globe and see
-            how many of the world's most observed species you can find.
-          </p>
-          <button
-            type="button"
-            onClick={signIn}
-            className={`${BTN_PRIMARY} mt-6`}
-          >
-            Sign in with Google to start
-          </button>
-          {signInError && (
-            <p role="alert" className="mt-3 text-sm text-red-700">
-              {signInError}
-            </p>
-          )}
-        </section>
-      </PageShell>
-    );
-  }
-
-  /* ----- Signed in ----- */
+  const signedIn = Boolean(w.user);
 
   const trackedCollection = w.tracked
     ? w.collections.find((c) => c.id === w.tracked)
@@ -207,33 +183,58 @@ const WildlifeMap = () => {
             className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl"
             style={{ color: THEME.ink }}
           >
-            My wildlife map
+            {signedIn ? "My wildlife map" : "Your wildlife map"}
           </h1>
-          <p className="mt-2 text-sm text-[#8a8278]">
-            Signed in as {w.user.displayName ?? w.user.email} ·{" "}
-            <button
-              type="button"
-              onClick={signOutUser}
-              className="underline underline-offset-2"
-            >
-              Sign out
-            </button>
-          </p>
+          {w.user ? (
+            <p className="mt-2 text-sm text-[#8a8278]">
+              Signed in as {w.user.displayName ?? w.user.email} ·{" "}
+              <button
+                type="button"
+                onClick={signOutUser}
+                className="underline underline-offset-2"
+              >
+                Sign out
+              </button>
+            </p>
+          ) : (
+            <>
+              <p className="mt-2 max-w-xl text-base text-[#6b6359]">
+                Photograph animals in the wild, pin them on your own globe and
+                see how many of the world's most observed species you can find.
+              </p>
+              <button
+                type="button"
+                onClick={signIn}
+                className={`${BTN_WHITE} mt-4`}
+              >
+                Sign in with Google
+              </button>
+            </>
+          )}
+          {signInError && (
+            <p role="alert" className="mt-2 text-sm text-red-700">
+              {signInError}
+            </p>
+          )}
         </div>
         <div className="flex flex-wrap gap-3">
-          <Link to="/wildlife/photos" className={BTN_WHITE}>
-            All my photos
-          </Link>
           <button
             type="button"
-            onClick={() => setBatch(true)}
+            onClick={() => requireSignIn(() => navigate("/wildlife/photos"))}
+            className={BTN_WHITE}
+          >
+            All my photos
+          </button>
+          <button
+            type="button"
+            onClick={() => requireSignIn(() => setBatch(true))}
             className={BTN_WHITE}
           >
             Upload several
           </button>
           <button
             type="button"
-            onClick={() => setAdding({})}
+            onClick={() => requireSignIn(() => setAdding({}))}
             className={BTN_PRIMARY}
           >
             + Add a sighting
@@ -248,7 +249,7 @@ const WildlifeMap = () => {
       )}
 
       {/* CHOOSE A COLLECTION (first visit) */}
-      {!w.trackedLoading && !trackedCollection && (
+      {signedIn && !w.trackedLoading && !trackedCollection && (
         <section className="mt-8 rounded-2xl border-[1.5px] border-[#2B2420] bg-white p-6">
           <h2 className="text-xl font-semibold" style={{ color: THEME.ink }}>
             Choose a collection to track
@@ -275,67 +276,75 @@ const WildlifeMap = () => {
         </section>
       )}
 
-      {/* STATS */}
-      <dl className="mt-8 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-2xl border-[1.5px] border-[#2B2420] bg-white px-5 py-4">
-          <dt className="text-sm text-[#8a8278]">Animals photographed</dt>
-          <dd
-            className="mt-1 text-2xl font-semibold"
-            style={{ color: THEME.ink }}
-          >
-            {w.sightingsLoading ? "…" : w.uniqueAnimals}
-            {!w.sightingsLoading && (
-              <span className="ml-2 text-sm font-normal text-[#8a8278]">
-                in {w.sightings.length}{" "}
-                {w.sightings.length === 1 ? "photo" : "photos"}
-              </span>
-            )}
-          </dd>
-        </div>
-
-        {trackedCollection && (
+      {/* STATS (signed in only) */}
+      {signedIn && (
+        <dl className="mt-8 grid gap-4 sm:grid-cols-2">
           <div className="rounded-2xl border-[1.5px] border-[#2B2420] bg-white px-5 py-4">
-            <dt className="flex items-center justify-between gap-3 text-sm text-[#8a8278]">
-              <span>Tracking</span>
-              <label className="flex items-center gap-1">
-                <span className="sr-only">Change tracked collection</span>
-                <select
-                  value={trackedCollection.id}
-                  onChange={(e) => pickCollection(e.target.value)}
-                  className="rounded-full border border-[#2B2420] bg-white px-2 py-0.5 text-xs font-medium text-[#2B2420]"
-                >
-                  {w.collections.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </dt>
+            <dt className="text-sm text-[#8a8278]">Animals photographed</dt>
             <dd
               className="mt-1 text-2xl font-semibold"
               style={{ color: THEME.ink }}
             >
-              <Link
-                to={`/wildlife/${trackedCollection.id}`}
-                className="underline-offset-4 hover:underline"
-              >
-                {trackedCollection.name}
-              </Link>
-              <span className="ml-2 text-sm font-normal text-[#8a8278]">
-                {trackedCollection.id === NEAR_YOU_ID && w.nearby.loading
-                  ? "loading…"
-                  : `${trackedFound} / ${trackedList.length} found`}
-              </span>
+              {w.sightingsLoading ? "…" : w.uniqueAnimals}
+              {!w.sightingsLoading && (
+                <span className="ml-2 text-sm font-normal text-[#8a8278]">
+                  in {w.sightings.length}{" "}
+                  {w.sightings.length === 1 ? "photo" : "photos"}
+                </span>
+              )}
             </dd>
           </div>
-        )}
-      </dl>
 
-      {/* GLOBE */}
+          {trackedCollection && (
+            <div className="rounded-2xl border-[1.5px] border-[#2B2420] bg-white px-5 py-4">
+              <dt className="flex items-center justify-between gap-3 text-sm text-[#8a8278]">
+                <span>Tracking</span>
+                <label className="flex items-center gap-1">
+                  <span className="sr-only">Change tracked collection</span>
+                  <select
+                    value={trackedCollection.id}
+                    onChange={(e) => pickCollection(e.target.value)}
+                    className="rounded-full border border-[#2B2420] bg-white px-2 py-0.5 text-xs font-medium text-[#2B2420]"
+                  >
+                    {w.collections.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </dt>
+              <dd
+                className="mt-1 text-2xl font-semibold"
+                style={{ color: THEME.ink }}
+              >
+                <Link
+                  to={`/wildlife/${trackedCollection.id}`}
+                  className="underline-offset-4 hover:underline"
+                >
+                  {trackedCollection.name}
+                </Link>
+                <span className="ml-2 text-sm font-normal text-[#8a8278]">
+                  {trackedCollection.id === NEAR_YOU_ID && w.nearby.loading
+                    ? "loading…"
+                    : `${trackedFound} / ${trackedList.length} found`}
+                </span>
+              </dd>
+            </div>
+          )}
+        </dl>
+      )}
+
+      {/* GLOBE (empty until the visitor signs in and adds sightings) */}
       <SightingsGlobe
         points={points}
-        showEmpty={!w.sightingsLoading && w.sightings.length === 0}
+        emptyMessage={
+          !signedIn
+            ? "Sign in and add your sightings to light up your globe"
+            : !w.sightingsLoading && w.sightings.length === 0
+              ? "Your globe is empty. Add your first sighting!"
+              : null
+        }
         onPick={setOpen}
       />
 
